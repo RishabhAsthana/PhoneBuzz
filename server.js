@@ -31,7 +31,8 @@ app.post('/voice', (req, res) => {
 
 app.post('/action', (req, res) =>{
 	console.log("Action performed");
-	console.log(req.body);
+	let digits = Integer.parseInt(req.body.Digits);
+	console.log(digits);
 });
 
 app.get('/', (req, res) => {
