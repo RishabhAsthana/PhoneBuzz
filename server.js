@@ -32,12 +32,12 @@ app.post('/voice', (req, res) => {
 app.post('/action', (req, res) =>{
 	const twiml = new VoiceResponse();
 	let digits = parseInt(req.body.Digits, 10);
-	let res = ''
+	let result = ''
 	for (let i = 1; i <= digits; i++){
 		res += i.toString() + ' ';
 	}
-	console.log(res);
-	twiml.say(res);
+	console.log(result);
+	twiml.say(result);
 	res.send(twiml.toString());
 });
 
