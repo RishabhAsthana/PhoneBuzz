@@ -24,9 +24,6 @@ app.post('/voice', (req, res) => {
 	gather.say('Please input a number, then press the pound symbol.');
 
 	console.log(twiml.toString());
-
-	res.type('text/xml');
-	res.send(twiml.toString());
 });
 
 app.post('/action', (req, res) =>{
@@ -39,6 +36,8 @@ app.post('/action', (req, res) =>{
 	// }
 	console.log(result);
 	twiml.say('You entered ' + req.body.Digits);
+	res.type('text/xml');
+	res.send(twiml.toString());
 	// res.type('text/xml');
 	// res.send(twiml.toString());
 });
