@@ -5,15 +5,17 @@ const app = express();
 
 app.post('/voice', (req, res) => {
 	const twiml = new VoiceResponse();
-	twiml.say('Hello, Wanli Wang is so hot!');
+	twiml.say('Hello, Welcome to Phone Buzz!');
 
 	const gather = twiml.gather({
 	  input: 'dtmf',
 	  timeout: 10,
 	  numDigits: 3,
 	  finishOnKey: '#',
+	  action: '/action',
+	  method: 'POST',
 	});
-	gather.say('Input a number.');
+	gather.say('Please input a number, then press the pound symbol.');
 
 	console.log(twiml.toString());
 
