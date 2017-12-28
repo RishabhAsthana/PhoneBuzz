@@ -1,6 +1,7 @@
 const express = require('express');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const bodyParser = require('body-parser');
+const twiml = new VoiceResponse();
 
 const app = express();
 
@@ -10,7 +11,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.post('/voice', (req, res) => {
-	const twiml = new VoiceResponse();
 	twiml.say('Hello, Welcome to Phone Buzz!');
 
 	const gather = twiml.gather({
@@ -30,9 +30,10 @@ app.post('/voice', (req, res) => {
 });
 
 app.post('/action', (req, res) =>{
-	const twiml = new VoiceResponse();
+	console.log("Performing action");
 	let digits = parseInt(req.body.Digits, 10);
-	let result = ''
+	console.log(digits);
+	let result = '';
 	for (let i = 1; i <= digits; i++){
 		res += i.toString() + ' ';
 	}
