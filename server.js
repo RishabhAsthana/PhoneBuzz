@@ -30,9 +30,15 @@ app.post('/voice', (req, res) => {
 });
 
 app.post('/action', (req, res) =>{
-	console.log("Action performed");
-	let digits = Integer.parseInt(req.body.Digits);
-	console.log(digits);
+	const twiml = new VoiceResponse();
+	let digits = parseInt(req.body.Digits, 10);
+	let res = ''
+	for (let i = 1; i <= digits; i++){
+		res += i.toString() + ' ';
+	}
+	console.log(res);
+	twiml.say(res);
+	res.send(twiml.toString());
 });
 
 app.get('/', (req, res) => {
