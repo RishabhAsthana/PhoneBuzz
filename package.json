@@ -1,0 +1,15 @@
+{
+  "name": "phone-buzz",
+  "version": "1.0.0",
+  "description": "An app to play fizz-buzz over phone",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rishabh Asthana {asthana4@illinois.edu}",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "twilio": "^3.11.0"
+  }
+}
