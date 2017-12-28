@@ -38,8 +38,8 @@ app.post('/action', (req, res) =>{
 	}
 	console.log(result);
 	twiml.say(result);
-	res.type('text/xml');
-	res.send(twiml.toString());
+	// res.type('text/xml');
+	// res.send(twiml.toString());
 });
 
 app.get('/', (req, res) => {
