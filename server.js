@@ -9,8 +9,9 @@ app.post('/voice', (req, res) => {
 
 	const gather = twiml.gather({
 	  input: 'dtmf',
-	  timeout: 3,
-	  numDigits: 1,
+	  timeout: 10,
+	  numDigits: 3,
+	  finishOnKey: '#',
 	});
 	gather.say('Input a number.');
 
@@ -18,6 +19,10 @@ app.post('/voice', (req, res) => {
 
 	res.type('text/xml');
 	res.send(twiml.toString());
+});
+
+app.post('/action', (req, res) =>{
+	console.log("Action performed");
 });
 
 app.get('/', (req, res) => {
