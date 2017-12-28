@@ -32,9 +32,9 @@ app.post('/action', (req, res) =>{
 	let digits = parseInt(req.body.Digits, 10);
 	console.log(digits);
 	let result = '';
-	// for (let i = 1; i <= digits; i++){
-	// 	res += i.toString() + ' ';
-	// }
+	for (let i = 1; i <= digits; i++){
+		res += i.toString() + ' ';
+	}
 	console.log(result);
 	twiml.say('You entered ' + req.body.Digits);
 	res.type('text/xml');
