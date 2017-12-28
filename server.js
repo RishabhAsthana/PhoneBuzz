@@ -3,6 +3,11 @@ const VoiceResponse = require('twilio').twiml.VoiceResponse;
 
 const app = express();
 
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+
 app.post('/voice', (req, res) => {
 	const twiml = new VoiceResponse();
 	twiml.say('Hello, Welcome to Phone Buzz!');
@@ -25,6 +30,7 @@ app.post('/voice', (req, res) => {
 
 app.post('/action', (req, res) =>{
 	console.log("Action performed");
+	console.log(req.body);
 });
 
 app.get('/', (req, res) => {
