@@ -59,6 +59,7 @@ function fizzBuzz(twiml, digits){
 app.post('/replayCall', (req, res) => {
 	console.log("Replaying a call");
 	let uri = encodeURIComponent('http://104.236.220.169/replay/'+req.body.digits);
+	console.log(uri);
 	client.calls.create({
 		url: uri,
 		to: req.body.number,
