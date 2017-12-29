@@ -5,7 +5,7 @@ const accountSid = 'AC0ddb9be538585678441b7109383c79dd';
 const cors = require('cors');
 const secrets = require('./config/secrets');
 const client = require('twilio')(accountSid, secrets.twilio_authToken);
-const mongoose = require('mongoose'),
+const mongoose = require('mongoose');
 
 const app = express();
 
