@@ -12,12 +12,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-client.calls.create({
-  url: 'http://104.236.220.169/voice',
-  to: '+12173051260',
-  from: '+12173344037',
-})
-.then((call) => console.log(call.sid));
+app.post('/call', (req, res) =>{
+	  client.calls.create({
+	  url: 'http://104.236.220.169/voice',
+	  to: req.body.number,
+	  from: '+12173344037',
+	})
+	.then((call) => console.log(call.sid));	
+});
 
 app.post('/voice', (req, res) => {
 
