@@ -8,6 +8,7 @@ const secrets = require('./config/secrets');
 const client = require('twilio')(accountSid, secrets.twilio_authToken);
 const mongoose = require('mongoose');
 const axios = require('axios');
+process.env['TWILIO_AUTH_TOKEN'] = secrets.twilio_authToken;
 
 const app = express();
 
@@ -119,7 +120,7 @@ app.post('/replay/:digits', (req, res) => {
  *  For further information, please refer to:
  *  https://www.twilio.com/docs/guides/how-to-respond-to-incoming-phone-calls-in-node-js
  */
-app.post('/voice', client.webhook(), (req, res) => {
+app.post('/voice', twilio.webhook(), (req, res) => {
 
 	// Verify that X-Twilio-Signature header is present, we only care about Twilio enabled numbers
 	// if(!req.headers['x-twilio-signature']){
