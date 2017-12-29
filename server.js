@@ -5,6 +5,7 @@ const accountSid = 'AC0ddb9be538585678441b7109383c79dd';
 const cors = require('cors');
 const secrets = require('./config/secrets');
 const client = require('twilio')(accountSid, secrets.twilio_authToken);
+const mongoose = require('mongoose'),
 
 const app = express();
 
@@ -13,6 +14,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors());
+
+// Connect to a MongoDB
+mongoose.connect(secrets.mongo_connection, { useMongoClient: true});
+let logs = require('./models/log');
 
 app.post('/call', (req, res) =>{
 	let delay = 0;
@@ -73,5 +78,3 @@ app.get('/', (req, res) => {
 app.listen(80, function(){
 	console.log("Listening on port 80");
 });
-
-//https://demo.twilio.com/welcome/voice/
