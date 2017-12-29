@@ -13,10 +13,15 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.post('/call', (req, res) =>{
-	  client.calls.create({
-	  url: 'http://104.236.220.169/voice',
-	  to: req.body.number,
-	  from: '+12173344037',
+
+	let delay = req.body.delay;
+    if(delay){
+    	console.log('Delay provided : ' + delay);
+    }
+	client.calls.create({
+	url: 'http://104.236.220.169/voice',
+	to: req.body.number,
+	from: '+12173344037',
 	})
 	.then((call) => console.log(call.sid));	
 });
