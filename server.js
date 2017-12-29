@@ -2,10 +2,9 @@ const express = require('express');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const bodyParser = require('body-parser');
 const accountSid = 'AC0ddb9be538585678441b7109383c79dd';
-//const authToken = '039e815a743658de251d3c7af82624ef';
-const client = require('twilio')(accountSid, secrets.twilio_authToken);
 const cors = require('cors');
-const secrets = require('./config/secrets'),
+const secrets = require('./config/secrets');
+const client = require('twilio')(accountSid, secrets.twilio_authToken);
 
 const app = express();
 
