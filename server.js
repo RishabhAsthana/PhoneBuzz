@@ -75,6 +75,43 @@ app.get('/', (req, res) => {
 	res.send('Server is up and running');
 });
 
+// On POST /log
+app.post('/log', (req, res) => {
+
+	// Collect the data from body
+	var logProfile = {
+		phone_number: req.body.phone_number,
+		number: req.body.number,
+		delay: req.body.delay,
+	}
+	// Validate required fields are present
+  	if(logProfile.phone_number == null){
+    		return res.status(500).send({
+    			message: "Phone number field is missing",
+    			data: [],
+    	});
+	}
+
+	// Create the user document
+	logs.create(logProfile, function(err, log){
+	  	
+	  	if(err){
+	    		return res.status(500).send({
+	    			message: err,
+	    			data: [],
+	    	});
+		}
+    	else{
+    			return res.status(201).send({
+					message: 'OK',
+					data: log,
+    		});
+		}
+	
+	});
+
+});
+
 app.listen(80, function(){
 	console.log("Listening on port 80");
 });
