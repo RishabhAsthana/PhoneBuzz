@@ -119,13 +119,13 @@ app.post('/replay/:digits', (req, res) => {
  *  For further information, please refer to:
  *  https://www.twilio.com/docs/guides/how-to-respond-to-incoming-phone-calls-in-node-js
  */
-app.post('/voice', twilio.webhook(), (req, res) => {
+app.post('/voice', client.webhook(), (req, res) => {
 
 	// Verify that X-Twilio-Signature header is present, we only care about Twilio enabled numbers
-	if(!req.headers['x-twilio-signature']){
-		res.json('No X-Twilio-Signature header found');
-		return;
-	}
+	// if(!req.headers['x-twilio-signature']){
+	// 	res.json('No X-Twilio-Signature header found');
+	// 	return;
+	// }
 	const twiml = new VoiceResponse();
 	// If the 'Digits' param was present
 	if(req.body.Digits){
