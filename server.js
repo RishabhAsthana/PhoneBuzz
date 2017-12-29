@@ -112,6 +112,25 @@ app.post('/log', (req, res) => {
 
 });
 
+// On GET /logs
+app.get('/logs', function (req, res) {
+
+    logs.find({}, function(err, log_list){
+    	if(err){
+    		return res.status(500).send({
+    			message: err,
+    			data: [],
+    		});
+    	}
+    	else{
+    		return res.status(200).send({
+    			message: 'OK',
+    			data: log_list,
+    		});
+    	}
+    })
+});
+
 app.listen(80, function(){
 	console.log("Listening on port 80");
 });
