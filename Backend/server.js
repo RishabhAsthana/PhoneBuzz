@@ -35,7 +35,7 @@ let last_phone_number = '';
 let last_digits = '';
 let last_delay = '';
 
-let host_address = 'http://104.236.220.169';
+let host_address = 'Insert Backend URL here';
 
 
 /*  POST : /call
