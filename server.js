@@ -121,7 +121,7 @@ app.post('/replay/:digits', (req, res) => {
 app.post('/voice', (req, res) => {
 
 	// Verify that X-Twilio-Signature header is present, we only care about Twilio enabled numbers
-	if(!req.headers.x-twilio-signature){
+	if(!req.headers['x-twilio-signature']){
 		res.json('No X-Twilio-Signature header found');
 		return;
 	}
