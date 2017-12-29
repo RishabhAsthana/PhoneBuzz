@@ -1,3 +1,9 @@
+/*  
+ *  File: server.js
+ *  Contains the backend implementation
+ *  @author: Rishabh Asthana {asthana4@illinois.edu}
+ */
+
 const express = require('express');
 const twilio = require('twilio');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
@@ -89,7 +95,6 @@ function fizzBuzz(twiml, digits){
 app.post('/replayCall', (req, res) => {
 	console.log("Replaying a call");
 	let uri = 'http://104.236.220.169/replay/'+ req.body.digits;
-	console.log(uri);
 	client.calls.create({
 		url: uri,
 		to: req.body.number,
@@ -116,17 +121,12 @@ app.post('/replay/:digits', (req, res) => {
 /*  POST : /voice
  *  This endpoint when called responds with twiml to ask user to input a number ending with a '#' symbol.
  *  However, if the POST form contains 'Digits' parameter, the user input is not asked instead twiml
- *  generated upto the 'Digits' parameter is returned.
+ *  generated upto the 'Digits' parameter is returned. twilio.webhook() middleware verifies calling number is valid
  *  For further information, please refer to:
  *  https://www.twilio.com/docs/guides/how-to-respond-to-incoming-phone-calls-in-node-js
  */
 app.post('/voice', twilio.webhook(), (req, res) => {
 
-	// Verify that X-Twilio-Signature header is present, we only care about Twilio enabled numbers
-	// if(!req.headers['x-twilio-signature']){
-	// 	res.json('No X-Twilio-Signature header found');
-	// 	return;
-	// }
 	const twiml = new VoiceResponse();
 	// If the 'Digits' param was present
 	if(req.body.Digits){
