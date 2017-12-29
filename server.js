@@ -10,30 +10,40 @@ const axios = require('axios');
 
 const app = express();
 
+// Use body parser to deconstruct the POST forms
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+// Use CORS to allow Frontend to communicate properly
 app.use(cors());
 
 // Connect to a MongoDB
 mongoose.connect(secrets.mongo_connection, { useMongoClient: true});
 let logs = require('./models/log');
 
+// Temporary storage for the data associated with a log in the database 
 let last_phone_number = '';
 let last_digits = '';
 let last_delay = '';
 
+/*  POST : /call
+ *  This endpoint when called places a call to the provided 'number' in the form body and after
+ * 'delay' number of milliseconds have passed.
+ */
 app.post('/call', (req, res) =>{
 	let delay = 0;
+	// If there was a delay field provided, use that instead otherwise stick with no delay (0)
     if(req.body.delay){
     	delay = req.body.delay;
     	console.log('Delay provided in ms : ' + delay);
     }
     setTimeout(function(){
 	    console.log('Calling : ' + req.body.number);
+	    // Record the appropriate data
 	    last_phone_number = req.body.number;
 	    last_delay = delay;
+	    // Make the call after delay(ms)
 		client.calls.create({
 		url: 'http://104.236.220.169/voice',
 		to: req.body.number,
@@ -43,10 +53,16 @@ app.post('/call', (req, res) =>{
 			console.log(call.sid);
 			res.send('Call complete');
 		});	    	
-    }, delay);
+    }, delay);  
 
 });
 
+/*  
+ * This function generates the Fizz-buzz series upto the given 'digits' number and conveys it back to the users
+ * @params:
+ * twiml: Voice response twilio object
+ * digits: Number indicating the last number in Fizz-buzz series
+ */
 function fizzBuzz(twiml, digits){
 	let result = '';
 	for (let i = 1; i <= digits; i++){
@@ -60,9 +76,14 @@ function fizzBuzz(twiml, digits){
 			result = i.toString();
 		twiml.say(result);
 	} 
+	// Hang the phone when done
 	twiml.hangup();	
 }
 
+/*  POST : /replayCall
+ *  This endpoint when called replays a call to the provided 'number' in the form body,
+ *  with the 'digits' being the last number in Fizz-buzz series, provided by the user in that particular call
+ */
 app.post('/replayCall', (req, res) => {
 	console.log("Replaying a call");
 	let uri = 'http://104.236.220.169/replay/'+ req.body.digits;
@@ -78,6 +99,9 @@ app.post('/replayCall', (req, res) => {
 		});	    	
 });
 
+/*  POST : /replay/:digits
+ *  This endpoint when called responds with twiml to recite Fizz-buzz series upto the 'digits' number
+ */
 app.post('/replay/:digits', (req, res) => {
 	console.log('Replay digits : ' + req.params.digits);
 	let digits = parseInt(req.params.digits, 10);
@@ -87,13 +111,26 @@ app.post('/replay/:digits', (req, res) => {
 	res.send(twiml.toString());
 });
 
+/*  POST : /voice
+ *  This endpoint when called responds with twiml to ask user to input a number ending with a '#' symbol.
+ *  However, if the POST form contains 'Digits' parameter, the user input is not asked instead twiml
+ *  generated upto the 'Digits' parameter is returned.
+ *  For further information, please refer to:
+ *  https://www.twilio.com/docs/guides/how-to-respond-to-incoming-phone-calls-in-node-js
+ */
 app.post('/voice', (req, res) => {
 
-	console.log(req.headers);
+	// Verify that X-Twilio-Signature header is present, we only care about Twilio enabled numbers
+	if(!req.headers.x-twilio-signature){
+		res.json('No X-Twilio-Signature header found');
+		return;
+	}
 	const twiml = new VoiceResponse();
+	// If the 'Digits' param was present
 	if(req.body.Digits){
 		let digits = parseInt(req.body.Digits, 10);
 		let last_digits = digits;
+		// Create a entry the database with appropriate data
     	axios.post('http://104.236.220.169/log', {
 	        phone_number: last_phone_number,
 	        number: last_digits,
@@ -105,6 +142,7 @@ app.post('/voice', (req, res) => {
         	});
 		fizzBuzz(twiml, digits);
 	}
+	// Otherwise ask user for input
 	twiml.say('Hello, Welcome to Phone Buzz!');
 	const gather = twiml.gather({
 	  input: 'dtmf',
@@ -121,7 +159,9 @@ app.get('/', (req, res) => {
 	res.send('Server is up and running');
 });
 
-// On POST /log
+/*  POST : /log
+ *  This endpoint when called creates an entry in the database using the parameters present inside the POST form body
+ */
 app.post('/log', (req, res) => {
 
 	// Collect the data from body
@@ -137,10 +177,8 @@ app.post('/log', (req, res) => {
     			data: [],
     	});
 	}
-
-	// Create the user document
+	// Create the log document
 	logs.create(logProfile, function(err, log){
-	  	
 	  	if(err){
 	    		return res.status(500).send({
 	    			message: err,
@@ -153,12 +191,12 @@ app.post('/log', (req, res) => {
 					data: log,
     		});
 		}
-	
 	});
-
 });
 
-// On GET /logs
+/*  GET : /logs
+ *  This endpoint when called returns all the call logs present in the database
+ */
 app.get('/logs', function (req, res) {
 
     logs.find({}, function(err, log_list){
@@ -177,6 +215,7 @@ app.get('/logs', function (req, res) {
     })
 });
 
+// Start listening in port 80
 app.listen(80, function(){
 	console.log("Listening on port 80");
 });
