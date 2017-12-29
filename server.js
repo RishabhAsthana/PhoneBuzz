@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const accountSid = 'AC0ddb9be538585678441b7109383c79dd';
 const authToken = '039e815a743658de251d3c7af82624ef';
 const client = require('twilio')(accountSid, authToken);
+const cors = require('cors');
 
 const app = express();
 
@@ -11,13 +12,14 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(cors());
 
 app.post('/call', (req, res) =>{
-
 	let delay = req.body.delay;
     if(delay){
     	console.log('Delay provided : ' + delay);
     }
+    console.log('Calling : ' + req.body.number);
 	client.calls.create({
 	url: 'http://104.236.220.169/voice',
 	to: req.body.number,
