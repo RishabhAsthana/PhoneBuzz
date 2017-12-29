@@ -140,7 +140,7 @@ app.post('/voice', twilio.webhook(), (req, res) => {
 	        }).then(function(response){
 	            console.log('Log added : ' + response);
 	        }).catch(function(err){
-	            console.log('Error occured : ' + JSON.stringify(err));
+	            console.log('Error occured : ' + err);
         	});
 		fizzBuzz(twiml, digits);
 	}
