@@ -35,6 +35,9 @@ let last_phone_number = '';
 let last_digits = '';
 let last_delay = '';
 
+let host_address = 'http://104.236.220.169';
+
+
 /*  POST : /call
  *  This endpoint when called places a call to the provided 'number' in the form body and after
  * 'delay' number of milliseconds have passed.
@@ -53,7 +56,7 @@ app.post('/call', (req, res) =>{
 	    last_delay = delay;
 	    // Make the call after delay(ms)
 		client.calls.create({
-		url: 'http://104.236.220.169/voice',
+		url: host_address + '/voice',
 		to: req.body.number,
 		from: '+12173344037',
 		})
@@ -94,7 +97,7 @@ function fizzBuzz(twiml, digits){
  */
 app.post('/replayCall', (req, res) => {
 	console.log("Replaying a call");
-	let uri = 'http://104.236.220.169/replay/'+ req.body.digits;
+	let uri = host_address + '/replay/'+ req.body.digits;
 	client.calls.create({
 		url: uri,
 		to: req.body.number,
@@ -133,7 +136,7 @@ app.post('/voice', twilio.webhook(), (req, res) => {
 		let digits = parseInt(req.body.Digits, 10);
 		let last_digits = digits;
 		// Create a entry the database with appropriate data
-    	axios.post('http://104.236.220.169/log', {
+    	axios.post( host_address + '/log', {
 	        phone_number: last_phone_number,
 	        number: last_digits,
 	        delay: last_delay
