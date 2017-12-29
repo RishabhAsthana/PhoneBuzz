@@ -6,6 +6,7 @@ const cors = require('cors');
 const secrets = require('./config/secrets');
 const client = require('twilio')(accountSid, secrets.twilio_authToken);
 const mongoose = require('mongoose');
+const axios = require('axios');
 
 const app = express();
 
@@ -19,6 +20,10 @@ app.use(cors());
 mongoose.connect(secrets.mongo_connection, { useMongoClient: true});
 let logs = require('./models/log');
 
+let last_phone_number = '';
+let last_digits = '';
+let last_delay = '';
+
 app.post('/call', (req, res) =>{
 	let delay = 0;
     if(req.body.delay){
@@ -27,6 +32,8 @@ app.post('/call', (req, res) =>{
     }
     setTimeout(function(){
 	    console.log('Calling : ' + req.body.number);
+	    last_phone_number = req.body.number;
+	    last_delay = delay;
 		client.calls.create({
 		url: 'http://104.236.220.169/voice',
 		to: req.body.number,
@@ -58,7 +65,7 @@ function fizzBuzz(twiml, digits){
 
 app.post('/replayCall', (req, res) => {
 	console.log("Replaying a call");
-	let uri = 'http://104.236.220.169/replay/'+req.body.digits;
+	let uri = 'http://104.236.220.169/replay/'+ req.body.digits;
 	console.log(uri);
 	client.calls.create({
 		url: uri,
@@ -82,9 +89,20 @@ app.post('/replay/:digits', (req, res) => {
 
 app.post('/voice', (req, res) => {
 
+	console.log(req.headers);
 	const twiml = new VoiceResponse();
 	if(req.body.Digits){
 		let digits = parseInt(req.body.Digits, 10);
+		let last_digits = digits;
+    	axios.post('http://104.236.220.169/log', {
+	        phone_number: last_phone_number,
+	        number: last_digits,
+	        delay: last_delay
+	        }).then(function(response){
+	            console.log('Log added : ' + response);
+	        }).catch(function(err){
+	            console.log('Error occured : ' + JSON.stringify(err));
+        	});
 		fizzBuzz(twiml, digits);
 	}
 	twiml.say('Hello, Welcome to Phone Buzz!');
