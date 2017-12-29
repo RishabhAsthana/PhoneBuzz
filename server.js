@@ -27,7 +27,10 @@ app.post('/call', (req, res) =>{
 		to: req.body.number,
 		from: '+12173344037',
 		})
-		.then((call) => console.log(call.sid));	    	
+		.then((call) => {
+			console.log(call.sid);
+			res.send('Call complete');
+		});	    	
     }, delay);
 
 });
