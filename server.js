@@ -56,6 +56,28 @@ function fizzBuzz(twiml, digits){
 	twiml.hangup();	
 }
 
+app.post('/replayCall', (req, res) => {
+	let uri = encodeURIComponent('http://104.236.220.169/replay?digits=' + req.body.digits);
+	client.calls.create({
+		url: uri,
+		to: req.body.number,
+		from: '+12173344037',
+		})
+		.then((call) => {
+			console.log(call.sid);
+			res.send('Replay complete');
+		});	    	
+});
+
+app.get('/replay', (req, res) => {
+	console.log('Replay digits : ' + req.params.digits);
+	let digits = parseInt(req.params.digits, 10);
+	const twiml = new VoiceResponse();
+	fizzBuzz(twiml, digits);
+	res.type('text/xml');
+	res.send(twiml.toString());
+});
+
 app.post('/voice', (req, res) => {
 
 	const twiml = new VoiceResponse();
