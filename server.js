@@ -63,6 +63,7 @@ app.post('/replayCall', (req, res) => {
 		url: uri,
 		to: req.body.number,
 		from: '+12173344037',
+		method: 'GET',
 		})
 		.then((call) => {
 			console.log(call.sid);
