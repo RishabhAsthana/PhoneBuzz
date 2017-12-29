@@ -1,3 +1,8 @@
+/*  
+ *  File: log.js
+ *  Contains the definition for log schemea
+ *  @author: Rishabh Asthana {asthana4@illinois.edu}
+ */
 // Load required packages
 var mongoose = require('mongoose');
 
