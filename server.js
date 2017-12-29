@@ -40,24 +40,28 @@ app.post('/call', (req, res) =>{
 
 });
 
+function fizzBuzz(twiml, digits){
+	let result = '';
+	for (let i = 1; i <= digits; i++){
+		if(i % 3 == 0 && i % 5 == 0)
+			result = 'FizzBuzz';
+		else if(i % 3 == 0)
+			result = 'Fizz';
+		else if(i % 5 == 0)
+			result = 'Buzz'
+		else
+			result = i.toString();
+		twiml.say(result);
+	} 
+	twiml.hangup();	
+}
+
 app.post('/voice', (req, res) => {
 
 	const twiml = new VoiceResponse();
 	if(req.body.Digits){
 		let digits = parseInt(req.body.Digits, 10);
-		let result = '';
-		for (let i = 1; i <= digits; i++){
-			if(i % 3 == 0 && i % 5 == 0)
-				result = 'FizzBuzz';
-			else if(i % 3 == 0)
-				result = 'Fizz';
-			else if(i % 5 == 0)
-				result = 'Buzz'
-			else
-				result = i.toString();
-			twiml.say(result);
-		} 
-		twiml.hangup(); 
+		fizzBuzz(twiml, digits);
 	}
 	twiml.say('Hello, Welcome to Phone Buzz!');
 	const gather = twiml.gather({
