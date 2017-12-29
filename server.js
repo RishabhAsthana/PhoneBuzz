@@ -58,12 +58,11 @@ function fizzBuzz(twiml, digits){
 
 app.post('/replayCall', (req, res) => {
 	console.log("Replaying a call");
-	let uri = 'http://104.236.220.169/replay';
+	let uri = encodeURIComponent('http://104.236.220.169/replay?digits='+req.body.digits);
 	client.calls.create({
 		url: uri,
 		to: req.body.number,
 		from: '+12173344037',
-		digits: req.body.number,
 		})
 		.then((call) => {
 			console.log(call.sid);
@@ -72,8 +71,8 @@ app.post('/replayCall', (req, res) => {
 });
 
 app.post('/replay', (req, res) => {
-	console.log('Replay digits : ' + req.body.digits);
-	let digits = parseInt(req.body.digits, 10);
+	console.log('Replay digits : ' + req.params.digits);
+	let digits = parseInt(req.params.digits, 10);
 	const twiml = new VoiceResponse();
 	fizzBuzz(twiml, digits);
 	res.type('text/xml');
