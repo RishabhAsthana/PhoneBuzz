@@ -17,8 +17,8 @@ app.use(cors());
 app.post('/call', (req, res) =>{
 	let delay = 0;
     if(req.body.delay){
-    	console.log('Delay provided : ' + delay);
     	delay = req.body.delay;
+    	console.log('Delay provided in ms : ' + delay);
     }
     setTimeout(function(){
 	    console.log('Calling : ' + req.body.number);
