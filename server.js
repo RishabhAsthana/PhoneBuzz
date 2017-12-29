@@ -1,6 +1,9 @@
 const express = require('express');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 const bodyParser = require('body-parser');
+const accountSid = 'AC0ddb9be538585678441b7109383c79dd';
+const authToken = '039e815a743658de251d3c7af82624ef';
+const client = require('twilio')(accountSid, authToken);
 
 const app = express();
 
@@ -8,6 +11,13 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+
+client.calls.create({
+  url: 'http://104.236.220.169/voice',
+  to: '+12173051260',
+  from: '+12173344037',
+})
+.then((call) => console.log(call.sid));
 
 app.post('/voice', (req, res) => {
 
