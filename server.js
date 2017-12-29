@@ -15,17 +15,21 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post('/call', (req, res) =>{
-	let delay = req.body.delay;
+	let delay = 0;
     if(delay){
     	console.log('Delay provided : ' + delay);
+    	delay = req.body.delay;
     }
-    console.log('Calling : ' + req.body.number);
-	client.calls.create({
-	url: 'http://104.236.220.169/voice',
-	to: req.body.number,
-	from: '+12173344037',
-	})
-	.then((call) => console.log(call.sid));	
+    setTimeout(function(){
+	    console.log('Calling : ' + req.body.number);
+		client.calls.create({
+		url: 'http://104.236.220.169/voice',
+		to: req.body.number,
+		from: '+12173344037',
+		})
+		.then((call) => console.log(call.sid));	    	
+    }, delay);
+
 });
 
 app.post('/voice', (req, res) => {
